@@ -1,16 +1,43 @@
 package net.cnam.inf330;
 
 import java.util.*;
+import static java.lang.Math.abs;
+
 
 /**
  * Class for managing the rovers that are deployed on the Mars exploration grid.
  */
-public class MissionCommandCenter {
+public final class MissionCommandCenter {
     private int gridWidth;
     private int gridHeight;
     private List<Rover> rovers;
 
     // TODO 1) Make MCC a singleton class
+    private static volatile MissionCommandCenter instance =null;
+
+    public static MissionCommandCenter getInstance(){
+        if(instance == null){
+            synchronized (MissionCommandCenter.class){
+                if(instance == null){
+                    instance = new MissionCommandCenter();
+                }
+            }
+        }
+
+        return instance;
+    }
+
+    public static MissionCommandCenter getInstance(int gridWidth, int gridHeight ){
+        if(instance == null){
+            synchronized (MissionCommandCenter.class){
+                if(instance == null){
+                    instance = new MissionCommandCenter(gridWidth,gridHeight);
+                }
+            }
+        }
+
+        return instance;
+    }
 
     /**
      * Create a MCC without a predefined grid size.
@@ -97,12 +124,23 @@ public class MissionCommandCenter {
         } catch (InvalidRoverPositionException e) {
             // TODO 4) b) Don't deploy the rover if its initial position is invalid
             System.out.println("### WARNING : " + e.getMessage());
+            System.out.println("Rover won't be deployed because it's position is already occupied.");
+            return null;
         }
 
         System.out.println("Controlling rover " + roverId + "...");
         for (Character c : roverInstructions.toCharArray()) {
             rover.processCommand(RoverCommand.valueOf(String.valueOf(c)));
             // TODO 4) a) Make the rover pull back if the move is invalid
+            try{
+                checkRoverPosition(rover);
+            }catch ( Exception e) {
+                rover.rotateLeft();
+                rover.rotateLeft();
+                rover.moveForward();
+                rover.rotateLeft();
+                rover.rotateLeft();
+            }
         }
 
         System.out.println("Terminated communication with rover " + roverId + ".");
@@ -121,6 +159,14 @@ public class MissionCommandCenter {
                     "Position out of grid ! Communication signal weak.");
 
         // TODO 2) Throw an InvalidRoverPositionException if there is another rover on the rover's current position.
+        for (Rover rover2: rovers) {
+            if(rover.getId() != rover2.getId()){
+                if(rover.getX() == rover2.getX() && rover.getY() == rover2.getY()){
+                    throw new InvalidRoverPositionException(rover,
+                            "There is another rover on the rover's current position.");
+                }
+            }
+        }
     }
 
     /**
@@ -132,7 +178,9 @@ public class MissionCommandCenter {
      */
     public double computeRoverCoveragePercent(Rover rover) {
         // TODO 6) Compute the rover's grid coverage percentage
-        return 0d;
+        int nb_coordonnees_visitees = rover.getCoordonnees_visitees().size();
+        int taille = this.gridHeight*this.gridWidth;
+        return nb_coordonnees_visitees/taille;
     }
 
     /**

@@ -1,5 +1,8 @@
 package net.cnam.inf330;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class which represents a Rover deployed on the Mars exploration grid.
  */
@@ -9,6 +12,7 @@ public class Rover {
     private int x;
     private int y;
     private Orientation o;
+    private ArrayList<Coordonnees> coordonnees_visitees;
 
     /**
      * Create a Rover at a specified location and orientation on the grid.
@@ -23,6 +27,7 @@ public class Rover {
         this.x = x;
         this.y = y;
         this.o = o;
+        this.coordonnees_visitees = new ArrayList<Coordonnees>();
     }
 
     /**
@@ -116,6 +121,10 @@ public class Rover {
                 break;
             default:
         }
+        Coordonnees new_coord = new Coordonnees(this.x, this.y);
+        if (!coordonnees_visitees.contains(new_coord)) {
+            coordonnees_visitees.add(new_coord);
+        }
     }
 
     /**
@@ -148,5 +157,9 @@ public class Rover {
      */
     public Orientation getO() {
         return o;
+    }
+
+    public ArrayList<Coordonnees> getCoordonnees_visitees() {
+        return coordonnees_visitees;
     }
 }

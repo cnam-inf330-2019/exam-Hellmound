@@ -12,6 +12,7 @@ public class Rover {
     private int x;
     private int y;
     private Orientation o;
+    // FIXME Should have used a Set
     private ArrayList<Coordonnees> coordonnees_visitees;
 
     /**

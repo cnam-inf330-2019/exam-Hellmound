@@ -21,6 +21,7 @@ public class RoverTest {
     public static void initMissionCommandCenter() {
 
         // TODO 1) Initialize MCC singleton instance before the test methods are run
+        // FIXME The idea was to store the instance in a member variable
         MissionCommandCenter mcc = MissionCommandCenter.getInstance();
     }
 
@@ -38,8 +39,9 @@ public class RoverTest {
         rover.moveForward();
         ThrowingRunnable tr = () -> mcc.checkRoverPosition(rover);
         assertThrows(InvalidRoverPositionException.class, tr);
+        // FIXME Check that the rover has moved backward
         ThrowingRunnable tr2 = () -> mcc.checkRoverPosition(rover);
-        assertThrows(InvalidRoverPositionException.class, tr2);
+        assertThrows(InvalidRoverPositionException.class, tr2); // FIXME ???
 
         mcc.clearRovers();
     }
@@ -55,10 +57,12 @@ public class RoverTest {
         Rover rover = new Rover(2, 0,1,Orientation.N);
         mcc.addRover(rover);
         rover.moveForward();
+        // FIXME What is the purpose of this try / catch block ?
         try{
             ThrowingRunnable tr = () -> mcc.checkRoverPosition(rover);
             assertThrows(InvalidRoverPositionException.class, tr);
         }catch ( Exception e) {
+            // FIXME Why not simply add a moveBackward method to the Rover class ?
             rover.rotateLeft();
             rover.rotateLeft();
             rover.moveForward();
@@ -90,7 +94,7 @@ public class RoverTest {
         List<String> inputLines = Main.readResourceFile("rover_test_input.txt");
         List<String> expectedOutputLines = Main.readResourceFile("rover_test_output.txt");
 
-        // TODO 7) Test that processing the input lines produces an output that matches the expected output lines
+        // TODO FIXME 7) Test that processing the input lines produces an output that matches the expected output lines
         fail();
     }
 }

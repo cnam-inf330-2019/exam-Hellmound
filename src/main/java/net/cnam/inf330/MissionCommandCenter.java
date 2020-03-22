@@ -42,6 +42,7 @@ public final class MissionCommandCenter {
     /**
      * Create a MCC without a predefined grid size.
      */
+    // FIXME Constructor should be made private
     public MissionCommandCenter() {
         this.gridWidth = -1;
         this.gridHeight = -1;
@@ -54,6 +55,7 @@ public final class MissionCommandCenter {
      * @param gridWidth  The width (X axis) of the exploration grid
      * @param gridHeight The height (Y axis) of the exploration grid
      */
+    // FIXME Constructor should be made private
     public MissionCommandCenter(int gridWidth, int gridHeight) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
@@ -85,6 +87,7 @@ public final class MissionCommandCenter {
             String roverInstructionsData = it.next();
 
             Rover rover = deployAndMoveRover(currentRoverId, roverInitialStateData, roverInstructionsData);
+            // FIXME What if the rover is null ? => NPE
             rovers.add(rover);
             System.out.println("Rover " + currentRoverId + "'s final state : " + rover);
 
@@ -135,6 +138,7 @@ public final class MissionCommandCenter {
             try{
                 checkRoverPosition(rover);
             }catch ( Exception e) {
+                // FIXME Why not simply add a moveBackward method to the Rover class ?
                 rover.rotateLeft();
                 rover.rotateLeft();
                 rover.moveForward();
